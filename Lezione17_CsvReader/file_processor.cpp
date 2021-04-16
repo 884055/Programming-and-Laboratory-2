@@ -161,6 +161,42 @@ class Table {
             output.close();
         }
 
+
+    //We assume that the current table contains only the first column with string values (the keys over whom we want to merge)
+    //and all the other columns are numeric. This computes for each distinct value in the first column the sum of all the values
+    //in the other columns
+    Table summarize()
+    {
+        vector<string> strings_column;
+        vector<vector<int>> numbers{numerical_columns.size()};
+        vector<vector<Date>> dates;
+        vector<string> headers;
+
+        vector<string> keys = string_columns.at(0);
+        for (int i = 0; i < keys.size(); i++)
+        {
+            string key = keys.at(i);
+            auto previous_value = std::find(strings_column.begin(), strings_column.end(), key);
+            if (previous_value != strings_column.end())
+            {
+                int index = previous_value - strings_column.begin();
+                for (int j = 0; j < numerical_columns.size(); j++)
+                {
+                    int value = numerical_columns.at(j).at(i);
+                    numbers.at(j).at(index) += value;
+                }
+            }
+            else
+            {
+                strings_column.push_back(key);
+                for (int j = 0; j < numerical_columns.size(); j++)
+                    numbers.at(j).push_back(numerical_columns.at(j).at(i));
+            }
+        }
+        vector<vector<string>> strings{strings_column};
+        return Table{col_types, headers, dates, numbers, strings};
+    }
+
     private:
         vector<column_types> col_types;
 
@@ -280,7 +316,7 @@ int main() {
     vector<string> numericals;
     numericals.push_back("totale");
     numericals.push_back("categoria_over80");
-    Table result=table.project("nome_area", numericals);
+    Table result=table.project("nome_area", numericals).summarize();
     result.dump_to_file("/home/prog2021/labprog/LabProg_2021/Lezione17_CsvReader/our_somministrazioni-vaccini-summary-latest.csv");
     
     return 0;
