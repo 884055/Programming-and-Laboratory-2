@@ -1,8 +1,8 @@
 all:
 	g++ Lezione9_Calculator/memcheck.cpp -o main_executable
 
-debug_executable: Lezione17_CsvReader/file_processor.cpp
-	g++ Lezione17_CsvReader/file_processor.cpp -g -o debug_executable
+debug_executable: Lezione21_Template/list.cpp
+	g++ Lezione21_Template/list.cpp -g -o debug_executable
 
 exercise: Esercitazione_temp/esercitazione.cpp
 	g++ Esercitazione_temp/esercitazione.cpp -g -o debug_executable
