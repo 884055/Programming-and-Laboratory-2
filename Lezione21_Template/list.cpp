@@ -23,7 +23,7 @@ class List {
         Cella* pc = source.l;
         
         while (pc) {
-            append(pc->info);
+            operator+=(pc->info);
             pc = pc->next;
         }
     }
@@ -67,19 +67,27 @@ class List {
   	// l1[4] = 9
   	int& operator[](int i) const;
   */
-  private:
+    List<T>& operator++(){
+        operator+=(last->info);
+        return *this;
+    }
 
-    struct Cella{
-      T info;
-      Cella* next;
-    };
-
-    Cella* l;     //Punt. prima cella della lista  
-    Cella* last;  //Punt. ultima cella della lista
-    //Lista vuota codificata con l==last==nullptr
+    List<T>& operator++(int i){
+        operator+=(last->info);
+        return *this;
+    }
 
 
-    void append(T el) {
+    List<T>& operator+=(const List<T>& rhs){
+        Cella* ptr = rhs.l;
+        while(ptr){
+            operator+=(ptr->info);
+            ptr = ptr->next;   
+        }
+        return *this;
+    }
+
+    const List<T>& operator+=(T el){
         Cella* nuova = new Cella;
         nuova->info = el;
         nuova->next=nullptr;
@@ -92,13 +100,44 @@ class List {
             last->next = nuova;
             last = nuova;
         }
+        return *this;
     }
+    List<T> operator+( List<T> const & rhs ) const {
+        List<T> result = List<T>{*this};
+        result += rhs;
+        return result;
+    }
+
+    List<T>  & operator=(List<T> other) {
+        cout << "Eseguo list" << endl;
+    }
+
+    List<T>  & operator=(int other) {
+        cout << "Eseguo int" << endl;
+    }
+
+  private:
+
+    struct Cella{
+      T info;
+      Cella* next;
+    };
+
+    Cella* l;     //Punt. prima cella della lista  
+    Cella* last;  //Punt. ultima cella della lista
+    //Lista vuota codificata con l==last==nullptr
+
 };
 
 
 int main() {
-    List<int> l_int = List<int>{1};
-    List<double> l_double = List<double>{1.0};
-    List<int> l1 = List<int>{l_int};
+    const List<int> l2 = List<int>{1};
+    List<int> l1 = List<int>{l2};
+    List<int> l3 = l1+l2+l1+l2+l1;
+    l1 = l2;
+    l1 = 3;
+
+
+
     return 0;
 }

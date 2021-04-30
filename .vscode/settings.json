@@ -3,6 +3,7 @@
         "new": "cpp",
         "*.tcc": "cpp",
         "iosfwd": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "string": "cpp"
     }
 }
